@@ -18,7 +18,22 @@ class UserController extends Controller
      */
     public function index()
     {
+        if (Auth::check() && Auth::user()->role == 'admin') {
+            $users = User::all();
+            return view('users.index', compact('users'));
+        }
         $users = User::where('role', 'artist')->get();
+        return view('users.index', compact('users'));
+    }
+
+    public function searchByName(Request $request)
+    {
+        $username = $request->input('username');
+        if (Auth::check() && Auth::user()->role == 'admin') {
+            $users = User::where('username', 'LIKE', '%' . $username . '%')->get();
+            return view('users.index', compact('users'));
+        }
+        $users = User::where('username', 'LIKE', '%' . $username . '%')->where('role', 'artist')->get();
         return view('users.index', compact('users'));
     }
 
@@ -30,6 +45,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
         return view('users.show', compact('user'));
     }
 
@@ -56,27 +74,34 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $id)
     {
+        $user = User::findOrFail($id);
 
-        if ($request->get('password') != '') {
-            $request->validate([
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            ]);
+        // Validar los campos del formulario
+        $validatedData = $request->validate([
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'profile_picture' => ['nullable', 'image', 'max:2048'],
+            'bio' => ['nullable', 'string', 'max:255'],
+        ]);
 
-            $user->password = Hash::make($request->get('password'));
-
-            $user->save();
+        // Actualizar los campos del usuario
+        $user->username = $validatedData['username'];
+        $user->email = $validatedData['email'];
+        if ($validatedData['password']) {
+            $user->password = Hash::make($validatedData['password']);
         }
-        $user->birthday = $request->get('birthday');
-        $user->twitter = $request->get('twitter');
-        $user->instagram = $request->get('instagram');
-        $user->twitch = $request->get('twitch');
-
+        if ($validatedData['profile_picture']) {
+            $user->profile_picture = $validatedData['profile_picture']->store('public/profile_pictures');
+        }
+        $user->bio = $validatedData['bio'];
         $user->save();
 
-        return view('users.edit', compact('user'));
+        return redirect()->route('users.show', $user->id)->with('success', 'Usuario actualizado correctamente');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -86,6 +111,15 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        if ((!Auth::check() && Auth::user()->id != $user->id) || (!Auth::check() && Auth::user()->role != 'admin')) {
+            return redirect()->route('inicio');
+        }
+        $result = User::find($id);
+        if ($result) {
+            $result->delete();
+            return redirect()->route('users.index')->with('success', 'El usuario ha sido eliminado correctamente.');
+        } else {
+            return redirect()->route('users.index')->with('error', 'No se ha encontrado el usuario a eliminar.');
+        }
     }
 }

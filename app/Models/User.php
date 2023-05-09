@@ -24,7 +24,6 @@ class User extends Authenticatable
         'role',
         'bio',
         'profile_picture',
-        'social_media'
     ];
 
     /**
@@ -45,4 +44,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the bookings for the user.
+     */
+    public function bookings() {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Get the publications for the user.
+     */
+    public function publications() {
+        return $this->hasMany(Publication::class);
+    }
+
+    /**
+     * Get the chats for the user.
+     */
+    public function chats() {
+        return $this->hasMany(Chat::class);
+    }
 }
