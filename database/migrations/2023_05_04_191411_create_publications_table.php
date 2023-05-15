@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->enum('tags', ['realistic', 'anime', 'traditional', 'blackwork', 'mandala', 'dotwork', 'fineline', 'lettering', 'neo-traditional', 'floral']);
             $table->string('image');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

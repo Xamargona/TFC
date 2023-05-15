@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\MessageController;
 use App\Http\Controllers\LoginController;
 
 /*
@@ -39,6 +38,6 @@ Route::resource('events', EventController::class)->only(['create', 'store', 'sho
 Route::resource('publications', EventController::class)->only(['index']);
 Route::resource('publications', EventController::class)->only(['create', 'store', 'show', 'edit', 'update', 'destroy']);
 
-Route::resource('messages', MessageController::class)->only(['create', 'store']);
-Route::resource('messages', MessageController::class)->only(['index', 'show', 'update', 'destroy']);
 
+
+Route::get('/users/search', 'UserController@search')->name('users.search');

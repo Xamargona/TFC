@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-bodyBackground {
+    background: url('/public/images/fondo3.webp') ;
+    background-position: top;
+    background-attachment: fixed;
+}
+
+@media (min-aspect-ratio: 1/1) {
+    .bg-bodyBackground {
+        background-size:  100% auto;
+    }
+}
+
+@media (max-aspect-ratio: 1/1) {
+    .bg-bodyBackground {
+        background-size: auto 100%;
+    }
+}
+
+.bg-profilecard {
+    background-color: rgba(171, 150, 128, 0.9);
+    border: 2px solid white;
+}
+
+.bg-follow-button {
+    background-color: #735945;
+}
+
+.bg-follow-button:hover {
+    background-color: #7e634e;
+}
+
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+.fade-in.visible {
+opacity: 1;
+}
+
+.outline-white {
+    -webkit-text-stroke: .5px white;
+}
+
+.search-form {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 20px;
+}

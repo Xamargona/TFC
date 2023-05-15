@@ -10,9 +10,11 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 
-<body>
+<body class="bg-bodyBackground">
     @include('partials.nav')
-    @yield('contenido')
+    <main class=" mt-32">
+        @yield('contenido')
+    </main>
     @include('partials.footer')
 </body>
 

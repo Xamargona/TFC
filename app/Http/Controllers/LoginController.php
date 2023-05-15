@@ -44,9 +44,15 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        if (Auth::guard('web')->attempt($credentials)) {
+            return redirect()->route('inicio');
+        }
 
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('inicio');
+        $credentials['username'] = $credentials['email'];
+        unset($credentials['email']);
+
+        if (Auth::guard('web')->attempt($credentials)) {
+            return redirect()->route('inicio');
         }
 
         return redirect()->back()->withErrors([
