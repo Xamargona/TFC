@@ -27,17 +27,17 @@ Route::get('login', [LoginController::class, 'loginForm']);
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-
-
-Route::resource('users', UserController::class)->only(['index', 'show']);
-Route::resource('users', UserController::class)->only(['edit', 'update', 'destroy']);
+Route::resource('users', UserController::class)->only(['index', 'show', 'search']);
+Route::resource('users', UserController::class)->only(['edit', 'update', 'destroy'])->middleware('auth');
+Route::get('/users/search', 'UserController@search')->name('users.search');
+Route::get('/users/{id}/changeRole', 'UserController@changeRole')->name('users.changeRole')->middleware('auth');
+// Route::get('/users/{username}/search', 'UserController@search')->name('users.search');
 
 Route::resource('events', EventController::class)->only(['index']);
-Route::resource('events', EventController::class)->only(['create', 'store', 'show', 'edit', 'update', 'destroy']);
+Route::resource('events', EventController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('auth');
 
-Route::resource('publications', EventController::class)->only(['index']);
-Route::resource('publications', EventController::class)->only(['create', 'store', 'show', 'edit', 'update', 'destroy']);
+Route::resource('publications', PublicationController::class)->only(['index']);
+Route::resource('publications', PublicationController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('auth');
 
-
-
-Route::get('/users/search', 'UserController@search')->name('users.search');
+Route::resource('contactMessages', ContactMessageController::class)->only(['index', 'create', 'store']);
+Route::resource('contactMessages', ContactMessageController::class)->only(['show', 'destroy'])->middleware('auth');

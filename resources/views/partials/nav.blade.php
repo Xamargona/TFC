@@ -1,7 +1,7 @@
 <nav class="border-gray-200 dark:bg-gray-900 fixed w-full top-0">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {{-- LOGO --}}
-        <a href="" class="flex items-center">
+        <a href="{{ route('inicio') }}" class="flex items-center">
             <img src="/images/logo2.png" class="h-14 mr-3" alt="Logo" />
             <span class="self-center text-3xl font-semibold whitespace-nowrap  text-red-800 font-serif italic">Kuro Ink</span>
         </a>
@@ -90,11 +90,11 @@
                 </li>
                 @if ((Auth::check() && Auth::user()->role == 'user') || !Auth::check())
                     <li>
-                        <a href="{{ route('contact_messages.create') }}" class="block py-2 pl-3 pr-4 text-black lg:text-white text rounded hover:bg-gray-100 lg:hover:bg-transparent lg:hover:text-blue-700 lg:p-0  ">Trabaja con nosotros</a>
+                        <a href="{{ route('contactMessages.create') }}" class="block py-2 pl-3 pr-4 text-black lg:text-white text rounded hover:bg-gray-100 lg:hover:bg-transparent lg:hover:text-blue-700 lg:p-0  ">Trabaja con nosotros</a>
                     </li>
                 @endif
                 <li>
-                    <a href="{{ route('contact_messages.create') }}" class="block py-2 pl-3 pr-4 text-black lg:text-white text rounded hover:bg-gray-100 lg:hover:bg-transparent lg:hover:text-blue-700 lg:p-0  ">Contacto</a>
+                    <a href="{{ route('contactMessages.create') }}" class="block py-2 pl-3 pr-4 text-black lg:text-white text rounded hover:bg-gray-100 lg:hover:bg-transparent lg:hover:text-blue-700 lg:p-0  ">Contacto</a>
                 </li>
                 @if (!Auth::check())
                     <li>

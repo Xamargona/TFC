@@ -4,7 +4,8 @@
 
 @section('contenido')
 
-    <form class="flex items-center search-form fade-in" action="{{ url('users.search') }}" method="GET">
+    <form class="flex items-center search-form fade-in" action="{{ route('users.search') }}" method="GET">
+        @csrf    
         <label for="simple-search" class="sr-only">Search</label>
         <div class="relative w-4/5">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -35,12 +36,12 @@
                                 @if (Auth::user()->role == 'admin')
                                     @if ($user->role == 'artist')
                                         <li>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Change role back to <span class=" text-red-600">USER</span></a>
+                                            <a href="{{ route('users.changeRole', $user->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Change role back to <span class=" text-red-600">USER</span></a>
                                         </li>
                                     @endif
                                     @if ($user->role == 'user')
                                         <li>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Change role to <span class=" text-red-600">ARTIST</span></a>
+                                            <a href="{{ route('users.changeRole', $user->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Change role to <span class=" text-red-600">ARTIST</span></a>
                                         </li>
                                 @endif
                                     <li>
@@ -60,7 +61,11 @@
                     </div>
 
                     <div class="flex flex-col items-center pb-10">
-                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/images/meme.jpg" alt="Profile Picture"/>
+                        @if ($user->avatar)
+                            <img class="w-32 h-32 mt-5 rounded-full" src="{{ asset('storage/' . $user->avatar) }}" alt="Profile picture">
+                        @else
+                            <img class="w-32 h-32 mt-5 rounded-full" src="{{ asset('public/images/placeholder.png') }}" alt="Profile picture">
+                        @endif
                         <h5 class="mb-1 text-xl font-medium text-gray-800 ">{{ $user->username }}</h5>
                         <span class="text-sm text-white ">{{ $user->email }}</span>
                         <div class="flex mt-4 space-x-3 md:mt-6">

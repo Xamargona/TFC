@@ -28,13 +28,32 @@ class UserController extends Controller
 
     public function search(Request $request)
     {
-        $username = $_GET['username'];
+        $username = $request->input('username');
         if (Auth::check() && Auth::user()->role == 'admin') {
             $users = User::where('username', 'LIKE', '%' . $username . '%')->get();
             return view('users.index', compact('users'));
         }
         $users = User::where('username', 'LIKE', '%' . $username . '%')->where('role', 'artist')->get();
         return view('users.index', compact('users'));
+    }
+
+    public function changeRole($id)
+    {
+        $user = User::findOrFail($id);
+
+        if (Auth::check() && Auth::user()->role == 'admin') {
+            if ($user->role == 'artist') {
+                $user->role = 'user';
+            } else {
+                $user->role = 'artist';
+            }
+
+            $user->save();
+
+            return redirect()->back()->with('success', 'User role from '.$user->username.' updated successfully to '.$user->role);
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -45,10 +64,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-        return view('users.show', compact('user'));
+        $user = User::findOrFail($id);
+        $followers = UserArtist::where('artist_id', $id)->with('followers')->get();
+        return view('users.show', compact('user', 'followers'));
     }
 
     /**
@@ -76,9 +94,14 @@ class UserController extends Controller
      */
     public function update(Request $request, User $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('inicio');
+        }else if (Auth::user()->id != $id->id) {
+            return redirect()->route('inicio');
+        }
+
         $user = User::findOrFail($id);
 
-        // Validar los campos del formulario
         $validatedData = $request->validate([
             'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -86,7 +109,6 @@ class UserController extends Controller
             'bio' => ['nullable', 'string', 'max:255'],
         ]);
 
-        // Actualizar los campos del usuario
         $user->username = $validatedData['username'];
         $user->email = $validatedData['email'];
         if ($validatedData['password']) {
@@ -95,11 +117,17 @@ class UserController extends Controller
         $user->bio = $validatedData['bio'];
         $user->save();
 
-        return redirect()->route('users.show', $user->id)->with('success', 'Usuario actualizado correctamente');
+        return redirect()->route('users.show', $user->id)->with('success', 'Información actualizada correctamente');
     }
 
     public function uploadAvatar(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('inicio');
+        }else if (Auth::user()->id != $request->user()->id) {
+            return redirect()->route('inicio');
+        }
+
         $request->validate([
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -118,8 +146,7 @@ class UserController extends Controller
             $user->save();
         }
 
-        return back()
-            ->with('success','You have successfully upload image.');
+        return back();
     }
     /**
      * Remove the specified resource from storage.

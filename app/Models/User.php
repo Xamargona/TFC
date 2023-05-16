@@ -23,7 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'bio',
-        'profile_picture',
+        'avatar',
     ];
 
     /**
@@ -65,4 +65,5 @@ class User extends Authenticatable
     public function chats() {
         return $this->hasMany(Chat::class);
     }
+
 }

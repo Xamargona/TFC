@@ -10,3 +10,8 @@ class UserArtist extends Model
     protected $table = 'user_artist';
     use HasFactory;
 }
+
+public function followers()
+{
+    return $this->hasMany(User::class, 'id', 'user_id');
+}
