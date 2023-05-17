@@ -1,27 +1,25 @@
 @extends('layout')
 
-@section('titulo', 'Crear evento')
+@section('titulo', 'Crear publicación')
 
 @section('contenido')
-<form action="{{ route('publications.store') }}" method="POST">
+<form method="POST" action="{{ route('publications.store') }}" enctype="multipart/form-data" class="bg-white">
     @csrf
+
     <div>
-        <label for="title">Title:</label>
-        <input type="text" name="title" id="title">
+        <label for="title">Título:</label>
+        <input type="text" name="title" id="title" required>
     </div>
+<br>
     <div>
-        <label for="image">Image:</label>
-        <input type="file" name="image" id="image">
+        <label for="image">Imagen:</label>
+        <input type="file" name="image" id="image" required>
     </div>
-    <div>
-        <label for="tags">Tags:</label>
-        <select name="tags[]" id="tags" multiple>
-            @foreach ($tags as $tag)
-                <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <button type="submit">Create Publication</button>
+<br>
+
+
+    <button type="submit">Guardar</button>
 </form>
+
 
 @endsection

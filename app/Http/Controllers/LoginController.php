@@ -53,10 +53,8 @@ class LoginController extends Controller
         }
 
         $credentials = $request->only('email', 'password');
-        $recuerdame = (request()->remember) ? true : false;
 
         if (Auth::guard('web')->attempt($credentials, $recuerdame)) {
-            $request->session()->regenerate();
             return redirect()->route('inicio');
         }
 
@@ -64,7 +62,6 @@ class LoginController extends Controller
         unset($credentials['email']);
 
         if (Auth::guard('web')->attempt($credentials, $recuerdame)) {
-            $request->session()->regenerate();
             return redirect()->route('inicio');
         }
 
@@ -79,8 +76,6 @@ class LoginController extends Controller
             return redirect()->route('login');
         }
         Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
         return redirect()->route('inicio');
     }
 

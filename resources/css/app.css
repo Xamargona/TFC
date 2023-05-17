@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .bg-bodyBackground {
-    background: url('/public/images/fondo3.webp') ;
+    background: url('/public/app/fondo3.webp') ;
     background-position: top;
     background-attachment: fixed;
 }
@@ -25,6 +25,11 @@
     border: 2px solid white;
 }
 
+.bg-register {
+    background-color: rgba(171, 150, 128, 0.9);
+    border: 2px solid white;
+}
+
 .bg-follow-button {
     background-color: #735945;
 }
@@ -32,6 +37,15 @@
 .bg-follow-button:hover {
     background-color: #7e634e;
 }
+
+.bg-register-button {
+    background-color: #735945;
+}
+
+.bg-register-button:hover {
+    background-color: #7e634e;
+}
+
 
 .fade-in {
     opacity: 0;

@@ -66,4 +66,16 @@ class User extends Authenticatable
         return $this->hasMany(Chat::class);
     }
 
+    public function users() {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'user_user', 'artist_id', 'user_id');
+    }
+
+    public function following() {
+        return $this->belongsToMany(User::class, 'user_user', 'user_id', 'artist_id');
+    }
 }

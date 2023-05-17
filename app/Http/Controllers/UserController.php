@@ -16,26 +16,22 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (Auth::check() && Auth::user()->role == 'admin') {
+        $searchTerm = $request->input('name');
+
+        if ($searchTerm && Auth::check() && Auth::user()->role == 'admin') {
+            $users = User::where('username', 'LIKE', "%{$searchTerm}%")->get();
+        } else if(Auth::check() && Auth::user()->role == 'admin') {
             $users = User::all();
-            return view('users.index', compact('users'));
+        } else if($searchTerm && $searchTerm != ''){
+            $users = User::where('username', 'LIKE', "%{$searchTerm}%")->where('role', 'artist')->get();
+        } else {
+            $users = User::where('role', 'artist')->get();
         }
-        $users = User::where('role', 'artist')->get();
         return view('users.index', compact('users'));
     }
 
-    public function search(Request $request)
-    {
-        $username = $request->input('username');
-        if (Auth::check() && Auth::user()->role == 'admin') {
-            $users = User::where('username', 'LIKE', '%' . $username . '%')->get();
-            return view('users.index', compact('users'));
-        }
-        $users = User::where('username', 'LIKE', '%' . $username . '%')->where('role', 'artist')->get();
-        return view('users.index', compact('users'));
-    }
 
     public function changeRole($id)
     {
@@ -64,9 +60,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user = User::findOrFail($id);
-        $followers = UserArtist::where('artist_id', $id)->with('followers')->get();
-        return view('users.show', compact('user', 'followers'));
+        $publications = $user->publications()->orderBy('created_at', 'desc')->get();
+        return view('users.show', compact('user', 'publications'));
     }
 
     /**
@@ -122,32 +117,30 @@ class UserController extends Controller
 
     public function uploadAvatar(Request $request)
     {
-        if (!Auth::check()) {
-            return redirect()->route('inicio');
-        }else if (Auth::user()->id != $request->user()->id) {
-            return redirect()->route('inicio');
-        }
-
-        $request->validate([
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $user = User::find($request->user()->id);
 
         if ($request->hasFile('avatar')) {
-            $avatarName = $request->user()->id.'_avatar'.time().'.'.$request->avatar->extension();
-            $request->avatar->storeAs('app/public/profile_pictures/', $avatarName);
-
-            if ($user->avatar) {
-                Storage::delete('app/public/profile_pictures/' . $user->avatar);
-            }
-
-            $user->avatar = $avatarName;
-            $user->save();
+            $imagen = $request->file('avatar');
+            $ruta = 'images';
+            $userAvatar = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
+            $imagen->move($ruta, $userAvatar);
+            Auth::user()->avatar = "$userAvatar";
         }
 
         return back();
     }
+
+    public function follow($id) {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        if(Auth::user()->id == $id) {
+            return redirect()->back();
+        }
+        $user = Auth::user();
+        $user->following()->toggle($id);
+        return redirect()->back();
+    }
+
     /**
      * Remove the specified resource from storage.
      *

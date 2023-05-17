@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\ContactMessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +29,10 @@ Route::get('login', [LoginController::class, 'loginForm']);
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::resource('users', UserController::class)->only(['index', 'show', 'search']);
+Route::resource('users', UserController::class)->only(['index', 'show', 'uploadAvatar']);
 Route::resource('users', UserController::class)->only(['edit', 'update', 'destroy'])->middleware('auth');
-Route::get('/users/search', 'UserController@search')->name('users.search');
-Route::get('/users/{id}/changeRole', 'UserController@changeRole')->name('users.changeRole')->middleware('auth');
-// Route::get('/users/{username}/search', 'UserController@search')->name('users.search');
+Route::get('/users/{id}/follow', [UserController::class, 'follow'])->name('follow')->middleware('auth');
+Route::get('/users/{id}/follow', [UserController::class, 'follow'])->name('follow')->middleware('auth');
 
 Route::resource('events', EventController::class)->only(['index']);
 Route::resource('events', EventController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('auth');
@@ -41,3 +42,6 @@ Route::resource('publications', PublicationController::class)->only(['create', '
 
 Route::resource('contactMessages', ContactMessageController::class)->only(['index', 'create', 'store']);
 Route::resource('contactMessages', ContactMessageController::class)->only(['show', 'destroy'])->middleware('auth');
+
+
+Route::resource('bookings', BookingMessageController::class)->only(['index', 'create', 'store', 'destroy'])->middleware('auth');

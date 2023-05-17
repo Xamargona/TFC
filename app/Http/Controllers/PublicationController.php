@@ -3,59 +3,61 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Publication;
+use App\Models\Tag;
 
 class PublicationController extends Controller
 {
     public function index(Request $request)
     {
-        $publications = Publication::with('tags');
 
-        if ($request->has('tags')) {
-            $tags = explode(',', $request->input('tags'));
-            $publications->whereHas('tags', function ($query) use ($tags) {
-                $query->whereIn('name', $tags);
-            });
-        }
-
-        $publications = $publications->get();
+        $publications = Publication::all();
 
         return view('publications.index', compact('publications'));
     }
 
     public function create()
     {
-        $tags = Tag::all();
-        $users = User::all();
-
-        return view('publications.create', compact('tags', 'users'));
+        return view('publications.create');
     }
 
     public function store(Request $request)
     {
-        $publication = new Publication($request->only(['title', 'image']));
-        $publication->user_id = $request->input('user_id');
+        // Validar los datos recibidos del formulario
+        if (!Auth::check() || Auth::user()->role = 'user') {
+            return redirect()->back();
+        }
+
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $publication = new Publication();
+        $publication->title = $validatedData['title'];
+        $publication->user_id = auth()->user()->id;
+
+        if ($request->hasFile('image')) {
+            $imagen = $request->file('image');
+            $ruta = 'images';
+            $imagenPublication = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
+            $imagen->move($ruta, $imagenPublication);
+            $publication->image = "$imagenPublication";
+        }
+
         $publication->save();
 
-        $publication->tags()->sync($request->input('tags', []));
-
-        return redirect()->route('publications.index');
+        $user = auth()->user();
+        return redirect()->route('users.show', compact('user'))->with('success', 'La publicación ha sido creada correctamente.');
     }
 
     public function edit(Publication $publication)
     {
-        $tags = Tag::all();
-        $users = User::all();
-
-        return view('publications.edit', compact('publication', 'tags', 'users'));
+        return view('publications.edit', compact('publication'));
     }
 
     public function update(Request $request, Publication $publication)
     {
-        $publication->update($request->only(['title', 'image', 'user_id']));
 
-        $publication->tags()->sync($request->input('tags', []));
-
-        return redirect()->route('publications.index');
     }
 
     public function destroy(Publication $publication)

@@ -1,8 +1,8 @@
-<nav class="border-gray-200 dark:bg-gray-900 fixed w-full top-0">
+<nav class="border-gray-200 dark:bg-gray-900 fixed w-full top-0 z-50">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {{-- LOGO --}}
         <a href="{{ route('inicio') }}" class="flex items-center">
-            <img src="/images/logo2.png" class="h-14 mr-3" alt="Logo" />
+            <img src="/app/logo2.png" class="h-14 mr-3" alt="Logo" />
             <span class="self-center text-3xl font-semibold whitespace-nowrap  text-red-800 font-serif italic">Kuro Ink</span>
         </a>
 
@@ -14,7 +14,13 @@
                     data-dropdown-placement="bottom">
                     <span class="sr-only">Open user menu</span>
                     {{-- FOTO DE PERFIL --}}
-                    <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
+                    @if (Auth::user()->avatar)
+                        <img class="w-11 h-11rounded-full" src="{{ ('storage/' . Auth::user()->avatar) }}"
+                            alt="profile picture">
+                    @else
+                        <img class="w-11 h-11 rounded-full" src="/app/placeholder.jpg"
+                            alt="profile picture">
+                    @endif
                 </button>
                 <!-- Dropdown menu -->
                 <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
@@ -25,6 +31,11 @@
                             class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{ Auth::user()->email }}</span>
                     </div>
                     <ul class="py-2" aria-labelledby="user-menu-button">
+                        <li>
+                            <a href="{{ route('users.show', Auth::user()->id) }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Ver
+                                perfil</a>
+                        </li>
                         <li>
                             <a href="{{ route('users.edit', Auth::user()->id) }}"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Editar

@@ -9,6 +9,10 @@ class Publication extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+    ];
+
     /**
      * Get the user publications.
      */
