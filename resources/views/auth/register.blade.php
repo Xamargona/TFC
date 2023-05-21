@@ -28,7 +28,6 @@
         <div class="flex justify-around flex-wrap">
             <button type="submit" class="text-white bg-register-button focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ">Registrarse</button>
             <a href="{{ route('login') }}" class="text-sm py-2.5 text-center font-medium hover:text-blue-700">¿Ya tienes una cuenta? Iniciar sesión</a>
-
         </div>
 
       </form>

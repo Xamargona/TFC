@@ -35,20 +35,20 @@ class UserController extends Controller
 
     public function changeRole($id)
     {
-        $user = User::findOrFail($id);
-
-        if (Auth::check() && Auth::user()->role == 'admin') {
-            if ($user->role == 'artist') {
-                $user->role = 'user';
-            } else {
-                $user->role = 'artist';
-            }
-
-            $user->save();
-
-            return redirect()->back()->with('success', 'User role from '.$user->username.' updated successfully to '.$user->role);
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        if(Auth::user()->role != 'admin') {
+            return redirect()->back();
         }
 
+        $user = User::find($id);
+        if ($user->role == 'user') {
+            $user->role = 'artist';
+        } else {
+            $user->role = 'user';
+        }
+        $user->save();
         return redirect()->back();
     }
 

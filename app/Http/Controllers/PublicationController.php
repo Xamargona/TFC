@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Publication;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
 
 class PublicationController extends Controller
 {
@@ -23,8 +24,10 @@ class PublicationController extends Controller
 
     public function store(Request $request)
     {
-        // Validar los datos recibidos del formulario
-        if (!Auth::check() || Auth::user()->role = 'user') {
+
+        if (!Auth::check()) {
+            return redirect()->back();
+        } elseif (Auth::user()->role != 'artist') {
             return redirect()->back();
         }
 
@@ -33,8 +36,6 @@ class PublicationController extends Controller
         ]);
 
         $publication = new Publication();
-        $publication->title = $validatedData['title'];
-        $publication->user_id = auth()->user()->id;
 
         if ($request->hasFile('image')) {
             $imagen = $request->file('image');
@@ -42,7 +43,11 @@ class PublicationController extends Controller
             $imagenPublication = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
             $imagen->move($ruta, $imagenPublication);
             $publication->image = "$imagenPublication";
+        } else {
+            return redirect()->back()->with('error', 'No se ha podido subir la imagen.');
         }
+        $publication->title = $validatedData['title'];
+        $publication->user_id = auth()->user()->id;
 
         $publication->save();
 

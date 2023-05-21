@@ -24,36 +24,27 @@
             @foreach ($users as $user)
                 <div class=" w-full max-w-sm bg-profilecard border rounded-lg shadow m-5 fade-in">
                     <div class="flex justify-end px-4 pt-5">
-                        @if ((Auth::check() && Auth::user()->role == 'admin') || (Auth::check() && (Auth::user()->role == 'artist' && Auth::user()->id == $user->id)))
-                        <button id="dropdownButton" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
+                        @if ((Auth::check() && Auth::user()->role == 'admin' && $user->role != 'admin'))
+                        <button id="dropdownButton{{ $user->id }}" data-dropdown-toggle="dropdown{{ $user->id }}" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
                             <span class="sr-only">Open dropdown</span>
                             <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
                         </button>
                         <!-- Dropdown menu -->
-                        <div id="dropdown" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                            <ul class="py-2" aria-labelledby="dropdownButton">
-                                @if (Auth::user()->role == 'admin')
+                        <div id="dropdown{{ $user->id }}" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
+                            <ul class="py-2" aria-labelledby="dropdownButton{{ $user->id }}">
+                                <form action="{{ route('changeRole', $user->id) }}">
+                                    @csrf
                                     @if ($user->role == 'artist')
-                                        <li>
-                                            <a href="{{ route('users.changeRole', $user->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Change role back to <span class=" text-red-600">USER</span></a>
-                                        </li>
+                                        <button type="submit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Cambiar rol a USER</button>
+                                    @else
+                                        <button type="submit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Cambiar rol a ARTIST</button>
                                     @endif
-                                    @if ($user->role == 'user')
-                                        <li>
-                                            <a href="{{ route('users.changeRole', $user->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Change role to <span class=" text-red-600">ARTIST</span></a>
-                                        </li>
-                                @endif
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Change role to </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete User</a>
-                                    </li>
-                                @endif
-
-                            <li>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a>
-                            </li>
+                                </form>
+                                <form action="{{ route('users.destroy', $user) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Eliminar usuario</button>
+                                </form>
                             </ul>
                         </div>
                         @endif

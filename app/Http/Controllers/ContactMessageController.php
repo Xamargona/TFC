@@ -21,13 +21,13 @@ class ContactMessageController extends Controller
 
         if (auth()->check()) {
             if (auth()->user()->role == 'admin') {
-                $contactMessages = ContactMessage::orderBy('created_at', 'desc')->get();
+                $messages = ContactMessage::orderBy('created_at', 'desc')->get();
             } else {
                 return redirect()->route('inicio');
             }
         }
 
-        return view('contactMessages.index', compact('contactMessages'));
+        return view('contactMessages.index', compact('messages'));
     }
 
     /**
@@ -48,16 +48,22 @@ class ContactMessageController extends Controller
      */
     public function store(Request $request)
     {
-        // Validamos los datos y guardamos el mensaje
+        $validatedData = $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'subject' => 'required|string|max:255',
+            'text' => 'required|string',
+        ]);
+
         $message = new ContactMessage();
-        $message->name = $request->name;
-        $message->email = $request->email;
-        $message->subject = $request->subject;
-        $message->text = $request->text;
-        $message->readed = 0;
+        $message->username = $validatedData['username'];
+        $message->email = $validatedData['email'];
+        $message->subject = $validatedData['subject'];
+        $message->text = $validatedData['text'];
         $message->save();
 
-        return redirect()->route('contactMessages.index')->with('success', 'Su mensaje se ha enviado correctamente');
+        return redirect()->route('inicio');
+
     }
 
     /**

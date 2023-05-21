@@ -29,10 +29,11 @@ Route::get('login', [LoginController::class, 'loginForm']);
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::resource('users', UserController::class)->only(['index', 'show', 'uploadAvatar']);
-Route::resource('users', UserController::class)->only(['edit', 'update', 'destroy'])->middleware('auth');
+Route::resource('users', UserController::class)->only(['index', 'show']);
+Route::resource('users', UserController::class)->only(['edit', 'update', 'destroy', 'uploadAvatar'])->middleware('auth');
 Route::get('/users/{id}/follow', [UserController::class, 'follow'])->name('follow')->middleware('auth');
 Route::get('/users/{id}/follow', [UserController::class, 'follow'])->name('follow')->middleware('auth');
+Route::get('/users/{id}/changeRole', [UserController::class, 'changeRole'])->name('changeRole')->middleware('auth');
 
 Route::resource('events', EventController::class)->only(['index']);
 Route::resource('events', EventController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('auth');

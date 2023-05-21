@@ -23,7 +23,6 @@ class LoginController extends Controller
         $request->validate([
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
         ]);
 
         $user = new User([
@@ -47,21 +46,24 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-
         if (Auth::check()) {
             return redirect()->route('inicio');
         }
 
-        $credentials = $request->only('email', 'password');
+        $credenciales = $request->only('username', 'password');
 
-        if (Auth::guard('web')->attempt($credentials, $recuerdame)) {
+        if (Auth::guard('web')->attempt($credenciales)) {
+            $request->session()->regenerateToken();
             return redirect()->route('inicio');
         }
 
-        $credentials['username'] = $credentials['email'];
-        unset($credentials['email']);
+        $credenciales = [
+            'email' => $request->input('username'),
+            'password' => $request->input('password'),
+        ];
 
-        if (Auth::guard('web')->attempt($credentials, $recuerdame)) {
+        if (Auth::guard('web')->attempt($credenciales)) {
+            $request->session()->regenerateToken();
             return redirect()->route('inicio');
         }
 

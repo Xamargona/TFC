@@ -57,8 +57,8 @@
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Crear evento</a>
                             </li>
                             <li>
-                                <a href="{{ route('bookings.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Ver reservas</a>
+                                <a href="{{ route('contactMessages.index') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Ver incidencias</a>
                             </li>
                         @endif
                         <li>
