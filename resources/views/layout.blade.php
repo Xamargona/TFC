@@ -11,11 +11,12 @@
 </head>
 
 <body class="bg-bodyBackground">
-    @include('partials.nav')
-    <main class=" mt-32">
-        @yield('contenido')
-    </main>
+@include('partials.nav')
+<main class=" mt-32">
+    @yield('contenido')
+</main>
     @include('partials.footer')
 </body>
 
 </html>
+

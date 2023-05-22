@@ -60,6 +60,7 @@ class ContactMessageController extends Controller
         $message->email = $validatedData['email'];
         $message->subject = $validatedData['subject'];
         $message->text = $validatedData['text'];
+        $message->readed = 0;
         $message->save();
 
         return redirect()->route('inicio');
@@ -72,13 +73,20 @@ class ContactMessageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(ContactMessage $message)
+    public function show($id)
     {
+        if (!auth()->check()) {
+            return redirect()->route('inicio');
+        } elseif (auth()->user()->role != 'admin') {
+            return redirect()->route('inicio');
+        }
+        $message = ContactMessage::findOrFail($id);
         if ($message->readed == 0) {
             $message->readed = 1;
             $message->save();
         }
-        return view('contactMessages.show');
+
+        return view('contactMessages.show', compact('message'));
     }
 
 
@@ -88,8 +96,14 @@ class ContactMessageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ContactMessage $message)
+    public function destroy($id)
     {
+        if (!auth()->check()) {
+            return redirect()->route('inicio');
+        } elseif (auth()->user()->role != 'admin') {
+            return redirect()->route('inicio');
+        }
+        $message = ContactMessage::findOrFail($id);
         $message->delete();
         return redirect()->route('contactMessages.index')->with('success', 'Mensaje eliminado correctamente');
     }

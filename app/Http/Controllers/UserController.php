@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 
 
 class UserController extends Controller
@@ -87,28 +87,60 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
         if (!Auth::check()) {
             return redirect()->route('inicio');
-        }else if (Auth::user()->id != $user->id) {
+        }else if (Auth::user()->id != $id) {
             return redirect()->route('inicio');
         }
 
         $user = User::findOrFail($id);
 
         $validatedData = $request->validate([
-            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'bio' => ['nullable', 'string', 'max:255'],
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+            ],
+            'bio' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+        ], [
+            'username.required' => 'El nombre de usuario es obligatorio.',
+            'username.string' => 'El nombre de usuario debe ser una cadena de texto.',
+            'username.max' => 'El nombre de usuario no puede superar los 255 caracteres.',
+            'username.unique' => 'El nombre de usuario ya está en uso.',
+            'email.required' => 'El email es obligatorio.',
+            'email.string' => 'El email debe ser una cadena de texto.',
+            'email.email' => 'El email debe ser una dirección de correo válida.',
+            'email.max' => 'El email no puede superar los 255 caracteres.',
+            'email.unique' => 'El email ya está en uso.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.string' => 'La contraseña debe ser una cadena de texto.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'bio.string' => 'La biografía debe ser una cadena de texto.',
+            'bio.max' => 'La biografía no puede superar los 255 caracteres.',
         ]);
 
         $user->username = $validatedData['username'];
         $user->email = $validatedData['email'];
-        if ($validatedData['password']) {
-            $user->password = Hash::make($validatedData['password']);
-        }
+        $user->password = Hash::make($validatedData['password']);
         $user->bio = $validatedData['bio'];
         $user->save();
 
@@ -120,16 +152,21 @@ class UserController extends Controller
 
         if (!Auth::check()) {
             return redirect()->route('inicio');
-        }else if (Auth::user()->id != $id->id) {
-            return redirect()->route('inicio');
         }
+
+        $validatedData = $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,gif|max:2048',
+        ]);
 
         $user = Auth::user();
         if ($request->hasFile('image')) {
+            if ($user->avatar != null) {
+                unlink(public_path('images/' . $user->avatar));
+            }
             $avatar = $request->file('image');
             $ruta = 'images';
-            $imagenAvatar = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
-            $imagen->move($ruta, $imagenAvatar);
+            $imagenAvatar = date('YmdHis') . "." . $avatar->getClientOriginalExtension();
+            $avatar->move($ruta, $imagenAvatar);
             $user->avatar = "$imagenAvatar";
         } else {
             return redirect()->back()->with('error', 'No se ha podido subir la imagen.');
@@ -166,9 +203,10 @@ class UserController extends Controller
         if ((!Auth::check() && Auth::user()->id != $user->id) || (!Auth::check() && Auth::user()->role != 'admin')) {
             return redirect()->route('inicio');
         }
-        $result = User::find($id);
-        if ($result) {
-            $result->delete();
+
+        if ($user) {
+            unlink(public_path('images/' . $user->avatar));
+            $user->delete();
             return redirect()->route('users.index')->with('success', 'El usuario ha sido eliminado correctamente.');
         } else {
             return redirect()->route('users.index')->with('error', 'No se ha encontrado el usuario a eliminar.');

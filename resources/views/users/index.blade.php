@@ -52,7 +52,7 @@
 
                     <div class="flex flex-col items-center pb-10">
                         @if ($user->avatar)
-                            <img class="w-32 h-32 mt-5 rounded-full" src="/images/{{$publication->user->avatar) }}" alt="Profile picture">
+                            <img class="w-32 h-32 mt-5 rounded-full" src="/images/{{($user->avatar) }}" alt="Profile picture">
                         @else
                             <img class="w-32 h-32 mt-5 rounded-full" src="{{ ('/app/placeholder.jpg') }}" alt="Profile picture">
                         @endif

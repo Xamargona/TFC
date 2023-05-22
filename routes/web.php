@@ -30,16 +30,20 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::resource('users', UserController::class)->only(['index', 'show']);
-Route::resource('users', UserController::class)->only(['edit', 'update', 'destroy', 'uploadAvatar'])->middleware('auth');
+Route::resource('users', UserController::class)->only(['edit', 'destroy'])->middleware('auth');
 Route::get('/users/{id}/follow', [UserController::class, 'follow'])->name('follow')->middleware('auth');
 Route::get('/users/{id}/follow', [UserController::class, 'follow'])->name('follow')->middleware('auth');
 Route::get('/users/{id}/changeRole', [UserController::class, 'changeRole'])->name('changeRole')->middleware('auth');
+Route::post('/users/upload-avatar', [UserController::class, 'uploadAvatar'])->name('upload.avatar');
+Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update')->middleware('auth');
 
 Route::resource('events', EventController::class)->only(['index']);
-Route::resource('events', EventController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('auth');
+Route::resource('events', EventController::class)->only(['create', 'store', 'edit', 'destroy'])->middleware('auth');
+Route::put('/events/{id}', [EventController::class, 'update'])->name('events.update')->middleware('auth');
 
 Route::resource('publications', PublicationController::class)->only(['index']);
-Route::resource('publications', PublicationController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware('auth');
+Route::resource('publications', PublicationController::class)->only(['create', 'store', 'edit', 'destroy'])->middleware('auth');
+Route::put('/publications/{id}', [PublicationController::class, 'update'])->name('publications.update')->middleware('auth');
 
 Route::resource('contactMessages', ContactMessageController::class)->only(['index', 'create', 'store']);
 Route::resource('contactMessages', ContactMessageController::class)->only(['show', 'destroy'])->middleware('auth');

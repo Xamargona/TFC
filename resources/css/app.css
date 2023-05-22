@@ -75,6 +75,10 @@ opacity: 1;
     -webkit-text-stroke: .5px white;
 }
 
+.outline-white-2 {
+    -webkit-text-stroke: .3px white;
+}
+
 .search-form {
     width: 100%;
     justify-content: center;

@@ -3,24 +3,21 @@
 @section('titulo', 'Vista evento')
 
 @section('contenido')
+
+    <h1 class=" mt-36 mb-4 text-4xl font-extrabold leading-none tracking-tight text-amber-950 outline-white md:text-5xl lg:text-6x text-center">Incidencia</h1>
     <section class="flex w-full p-10 flex-wrap justify-center">
-
-        <div class="w-full mb-9 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <div class=" p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="about" role="tabpanel"
-                aria-labelledby="about-tab">
-                <h2 class="mb-3 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">{{ $message->username }}
-                </h2>
-                <h4 class="mb-3 text-xl font-medium text-gray-500 dark:text-white">Asunto: {{ $message->subject }}</h4>
-                <p class="mb-3 text-gray-500 dark:text-gray-400">{{ $message->text }}</p>
-
-                <form action="{{ route('messages.destroy', $message) }}" method="POST">
+            <div class=" w-full bg-publi p-5 m-5 flex justify-center flex-col">
+                <h5 class="mb-3 text-2xl font-bold tracking-tight text-gray-900">{{ $message->username }}: {{ $message->email }}</h5>
+                <p class=" text-black font-semibold mb-2">{{ $message->subject }}</p>
+                <p class=" text-gray-700  font-semibold mb-2">{{ $message->description }}</p>
+                <p class=" text-gray-700  font-semibold mb-2">{{ $message->created_at }}</p>
+                <form action="{{ route('contactMessages.destroy', $message->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button
-                        class="inline-block p-4 text-blue-600 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500"
-                        type="submit">Eliminar mensaje</button>
+                        class="inline-block  text-blue-600 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500"
+                        type="submit">Eliminar incidencia</button>
                 </form>
             </div>
-        </div>
     </section>
 @endsection

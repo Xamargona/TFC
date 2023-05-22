@@ -7,7 +7,7 @@
     <section class=" flex justify-center p-5">
         <div class="flex flex-col items-center bg-gray-100 border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl fade-in">
             @if ($user->avatar)
-                <img class="object-cover w-full rounded-t-lg h-60 md:h-auto md:w-60 md:rounded-none md:rounded-l-lg" src="{{ ($user->avatar) }}" alt="profile picture">
+                <img class="object-cover w-full rounded-t-lg h-60 md:h-auto md:w-60 md:rounded-none md:rounded-l-lg" src=" /images/{{(Auth::user()->avatar)}} " alt="profile picture">
             @else
                 <img class="object-cover w-full rounded-t-lg h-60 md:h-auto md:w-60 md:rounded-none md:rounded-l-lg" src="{{ ('/app/placeholder.jpg') }}" alt="profile picture">
             @endif
