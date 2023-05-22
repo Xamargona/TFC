@@ -41,8 +41,6 @@
     @endif
 
 
-
-
     <section class="w-full flex justify-center">
         <div class="w-full max-w-screen-2xl flex justify-around flex-wrap">
             @foreach ( $publications as $publication)

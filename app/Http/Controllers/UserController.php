@@ -87,11 +87,11 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $id)
+    public function update(Request $request, User $user)
     {
         if (!Auth::check()) {
             return redirect()->route('inicio');
-        }else if (Auth::user()->id != $id->id) {
+        }else if (Auth::user()->id != $user->id) {
             return redirect()->route('inicio');
         }
 
@@ -118,13 +118,27 @@ class UserController extends Controller
     public function uploadAvatar(Request $request)
     {
 
-        if ($request->hasFile('avatar')) {
-            $imagen = $request->file('avatar');
-            $ruta = 'images';
-            $userAvatar = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
-            $imagen->move($ruta, $userAvatar);
-            Auth::user()->avatar = "$userAvatar";
+        if (!Auth::check()) {
+            return redirect()->route('inicio');
+        }else if (Auth::user()->id != $id->id) {
+            return redirect()->route('inicio');
         }
+
+        $user = Auth::user();
+        if ($request->hasFile('image')) {
+            $avatar = $request->file('image');
+            $ruta = 'images';
+            $imagenAvatar = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
+            $imagen->move($ruta, $imagenAvatar);
+            $user->avatar = "$imagenAvatar";
+        } else {
+            return redirect()->back()->with('error', 'No se ha podido subir la imagen.');
+        }
+
+        $user->save();
+
+        $user = auth()->user();
+        return redirect()->route('users.show', compact('user'))->with('success', 'La publicación ha sido creada correctamente.');
 
         return back();
     }

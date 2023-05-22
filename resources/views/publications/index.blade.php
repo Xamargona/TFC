@@ -12,7 +12,7 @@
             <div class="bg-topPubli max-w-sm  border border-gray-200 rounded-lg shadow fade-in m-5">
                 <a href="{{ route('users.show', $publication->user) }}" class="m-2 flex flex-row ">
                     @if ($publication->user->avatar)
-                        <img class="w-11 h-11rounded-full mr-2 ml-2" src="{{ ('storage/' . $publication->user->avatar) }}"
+                        <img class="w-11 h-11rounded-full mr-2 ml-2" src="/images/{{$publication->user->avatar) }}"
                             alt="profile picture">
                     @else
                         <img class="w-11 h-11 rounded-full mr-2" src="/app/placeholder.jpg"

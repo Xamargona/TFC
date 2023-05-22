@@ -15,7 +15,7 @@
                     <span class="sr-only">Open user menu</span>
                     {{-- FOTO DE PERFIL --}}
                     @if (Auth::user()->avatar)
-                        <img class="w-11 h-11rounded-full" src="{{ ('storage/' . Auth::user()->avatar) }}"
+                        <img class="w-11 h-11rounded-full" src="/images/{{Auth::user()->avatar) }}"
                             alt="profile picture">
                     @else
                         <img class="w-11 h-11 rounded-full" src="/app/placeholder.jpg"

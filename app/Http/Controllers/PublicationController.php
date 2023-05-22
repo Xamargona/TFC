@@ -62,7 +62,34 @@ class PublicationController extends Controller
 
     public function update(Request $request, Publication $publication)
     {
+        if (!Auth::check()) {
+            return redirect()->back();
+        } elseif (Auth::user()->role != 'artist') {
+            return redirect()->back();
+        }
 
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+
+        if ($request->hasFile('image')) {
+            unlink(public_path('images/' . $publication->image));
+            $imagen = $request->file('image');
+            $ruta = 'images';
+            $imagenPublication = date('YmdHis') . "." . $imagen->getClientOriginalExtension();
+            $imagen->move($ruta, $imagenPublication);
+            $publication->image = "$imagenPublication";
+        } else {
+            return redirect()->back()->with('error', 'No se ha podido subir la imagen.');
+        }
+        $publication->title = $validatedData['title'];
+
+        $publication->save();
+
+        $user = auth()->user();
+        return redirect()->route('users.show', compact('user'))->with('success', 'La publicación ha sido actualizada correctamente.');
+    }
     }
 
     public function destroy(Publication $publication)
