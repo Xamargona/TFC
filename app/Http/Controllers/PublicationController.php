@@ -18,6 +18,11 @@ class PublicationController extends Controller
 
     public function create()
     {
+        if (!Auth::check()) {
+            return redirect()->back();
+        } elseif (Auth::user()->role != 'artist') {
+            return redirect()->back();
+        }
         return view('publications.create');
     }
 
@@ -65,6 +70,13 @@ class PublicationController extends Controller
 
     public function edit(Publication $publication)
     {
+        if (!Auth::check()) {
+            return redirect()->back();
+        } elseif (Auth::user()->role != 'artist') {
+            return redirect()->back();
+        } elseif ($publication->user_id != Auth::user()->id) {
+            return redirect()->back();
+        }
         return view('publications.edit', compact('publication'));
     }
 
@@ -74,7 +86,7 @@ class PublicationController extends Controller
             return redirect()->back();
         } elseif (Auth::user()->role != 'artist') {
             return redirect()->back();
-        }
+        } 
 
         $publication = Publication::findOrFail($id);
 
