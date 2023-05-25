@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,5 +50,8 @@ Route::put('/publications/{id}', [PublicationController::class, 'update'])->name
 Route::resource('contactMessages', ContactMessageController::class)->only(['index', 'create', 'store']);
 Route::resource('contactMessages', ContactMessageController::class)->only(['show', 'destroy'])->middleware('auth');
 
+Route::get('/chat', [ChatController::class, 'index'])->name('chats.index')->middleware('auth');
+Route::get('/chat/{userId}', [ChatController::class, 'show'])->name('chats.show')->middleware('auth');
+Route::post('/chat/send-message', [ChatController::class, 'sendMessage'])->name('chats.sendMessage')->middleware('auth');
 
-Route::resource('bookings', BookingMessageController::class)->only(['index', 'create', 'store', 'destroy'])->middleware('auth');
+Route::resource('bookings', BookingController::class)->only(['index', 'store', 'destroy'])->middleware('auth');

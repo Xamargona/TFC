@@ -9,10 +9,15 @@ class Message extends Model
 {
     use HasFactory;
 
-    /**
-        * Get the chat messages.
-    */
-    public function chat() {
-        return $this->belongsTo(Chat::class);
+    public function transmitter()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'recipient_id');
+    }
+
+
 }

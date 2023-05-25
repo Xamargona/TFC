@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Publication;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 
 class PublicationController extends Controller
@@ -11,9 +12,20 @@ class PublicationController extends Controller
     public function index(Request $request)
     {
 
-        $publications = Publication::all();
+        if($request->has('etiquetas')) {
 
-        return view('publications.index', compact('publications'));
+            $etiquetas = $request->get('etiquetas');
+
+            $publications = Publication::whereHas('tags', function($query) use ($etiquetas) {
+                $query->whereIn('tag_id', $etiquetas);
+            })->get();
+
+            $tipos = Tag::all()->sortBy('name');
+            return view('publications.index', compact('publications', 'tipos'));
+        }
+        $publications = Publication::all()->sortByDesc('created_at');
+        $tipos = Tag::all()->sortBy('name');
+        return view('publications.index', compact('publications', 'tipos'));
     }
 
     public function create()
@@ -23,7 +35,9 @@ class PublicationController extends Controller
         } elseif (Auth::user()->role != 'artist') {
             return redirect()->back();
         }
-        return view('publications.create');
+
+        $tipos = Tag::all()->sortBy('name');
+        return view('publications.create', compact('tipos'));
     }
 
     public function store(Request $request)
@@ -34,7 +48,6 @@ class PublicationController extends Controller
         } elseif (Auth::user()->role != 'artist') {
             return redirect()->back();
         }
-
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -63,6 +76,11 @@ class PublicationController extends Controller
         $publication->user_id = auth()->user()->id;
 
         $publication->save();
+        if ($request->has('etiquetas')) {
+            $publication->tags()->detach();
+            $tags = $request->input('etiquetas');
+            $publication->tags()->attach($tags);
+        }
 
         $user = auth()->user();
         return redirect()->route('users.show', compact('user'))->with('success', 'La publicación ha sido creada correctamente.');
@@ -77,7 +95,8 @@ class PublicationController extends Controller
         } elseif ($publication->user_id != Auth::user()->id) {
             return redirect()->back();
         }
-        return view('publications.edit', compact('publication'));
+        $tipos = Tag::all()->sortBy('name');
+        return view('publications.edit', compact('publication', 'tipos'));
     }
 
     public function update(Request $request, $id)
@@ -86,7 +105,7 @@ class PublicationController extends Controller
             return redirect()->back();
         } elseif (Auth::user()->role != 'artist') {
             return redirect()->back();
-        } 
+        }
 
         $publication = Publication::findOrFail($id);
 
@@ -135,7 +154,10 @@ class PublicationController extends Controller
         } elseif ($publication->user_id != Auth::user()->id) {
             return redirect()->back();
         }
-        unlink(public_path('images/' . $publication->image));
+        if (file_exists(public_path('images/' . $publication->image))) {
+            unlink(public_path('images/' . $publication->image));
+        }
+        $publication->tags()->detach();
         $publication->delete();
 
         return redirect()->route('publications.index');

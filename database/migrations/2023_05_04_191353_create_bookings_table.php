@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('artist_id')->constrained('users');
-            $table->integer('session');
-            $table->date('date');
+            $table->foreignId('user_id')->constrained('users');
+            $table->boolean('session');
+            $table->timestamp('date');
             $table->timestamps();
         });
     }

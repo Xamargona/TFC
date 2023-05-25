@@ -79,8 +79,52 @@ opacity: 1;
     -webkit-text-stroke: .3px white;
 }
 
+.outline-white-3 {
+    -webkit-text-stroke: .1px white;
+}
+
+.outline-brown {
+    -webkit-text-stroke: .7px #947862;
+}
+
 .search-form {
     width: 100%;
     justify-content: center;
     margin-bottom: 20px;
+}
+
+.messages {
+    height: 400px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    margin: 10px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    background-color: rgba(171, 150, 128, 0.5);
+
+}
+
+.message {
+    width: fit-content;
+    padding: 10px;
+    padding-top: 12px;
+    margin: 5px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+}
+
+.sent {
+    text-align: right;
+    align-self: flex-end;
+    background-color: #1d8aff;
+    color: #fff;
+}
+
+.received {
+    text-align: left;
+    align-self: flex-start;
+    background-color: #0051a8;
+    color: #fff;
 }

@@ -60,7 +60,7 @@
                         <span class="text-sm text-white ">{{ $user->email }}</span>
                         <div class="flex mt-4 space-x-3 md:mt-6">
                             <a href="{{ route('users.show', $user) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-follow-button rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300">Ver perfil</a>
-                            <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200">Escríbeme</a>
+                            <a href="{{ route('chats.show', $user->id) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200">Escríbeme</a>
                         </div>
                     </div>
                 </div>
