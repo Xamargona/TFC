@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .bg-bodyBackground {
-    background: url('/public/app/fondo3.webp') ;
+    background: url('/public/app/fondo.webp') ;
     background-position: top;
     background-attachment: fixed;
 }
