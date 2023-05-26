@@ -52,4 +52,12 @@
             </div>
         </form>
     </section>
+    <section class="w-full flex justify-center">
+
+    <form action="{{ route('users.destroy', $user->id) }}" class="bg-register mb-5" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 font-bold">Eliminar cuenta</button>
+    </form>
+    </section>
 @endsection

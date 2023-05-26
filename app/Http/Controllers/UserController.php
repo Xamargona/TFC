@@ -205,7 +205,9 @@ class UserController extends Controller
         }
 
         if ($user) {
-            unlink(public_path('images/' . $user->avatar));
+            if ($user->avatar != null) {
+                unlink(public_path('images/' . $user->avatar));
+            }
             $user->delete();
             return redirect()->route('users.index')->with('success', 'El usuario ha sido eliminado correctamente.');
         } else {
