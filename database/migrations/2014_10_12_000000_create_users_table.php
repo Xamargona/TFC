@@ -34,7 +34,8 @@ return new class extends Migration
                 'email' => 'SamarucPiercing@gmail.com',
                 'password' => '$2y$10$IxunBxjdp2cToCJ8tXriLOtOPaO7qXyWlqoMjlcKyTterZbebOxWi',
                 'role' => 'artist',
-                'avatar' => 'samarucPiercingPP.jpg'
+                'avatar' => 'samarucPiercingPP.jpg',
+                'bio' => ''
             ],
             [
                 'username' => 'SamarucTattoo',
@@ -49,6 +50,13 @@ return new class extends Migration
                 'password' => '$2y$10$IxunBxjdp2cToCJ8tXriLOtOPaO7qXyWlqoMjlcKyTterZbebOxWi',
                 'role' => 'artist',
                 'avatar' => 'theFrogMasterPP.jpg'
+            ],
+            [
+                'username' => 'ann._ttoo',
+                'email' => 'ann._ttoo@gmail.com',
+                'password' => '$2y$10$IxunBxjdp2cToCJ8tXriLOtOPaO7qXyWlqoMjlcKyTterZbebOxWi',
+                'role' => 'artist',
+                'avatar' => 'ann._ttoo.jpg'
             ],
             [
                 'username' => 'user',
