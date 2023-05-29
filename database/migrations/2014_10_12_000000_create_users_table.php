@@ -25,10 +25,31 @@ return new class extends Migration
 
         DB::table('users')->insert(
             [
-                ['username' => 'admin',
-                'email' => 'admin@gmail.com',
-                'password' => '$2y$10$QMwJsV6co6OSYhYO4lMu/uF9RGvF84XMaozSiK2p7p/wZrfH.yF7u',
-                'role' => 'admin',],
+            ['username' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => '$2y$10$QMwJsV6co6OSYhYO4lMu/uF9RGvF84XMaozSiK2p7p/wZrfH.yF7u',
+            'role' => 'admin',],
+            [
+                'username' => 'SamarucPiercing',
+                'email' => 'SamarucPiercing@gmail.com',
+                'password' => '$2y$10$IxunBxjdp2cToCJ8tXriLOtOPaO7qXyWlqoMjlcKyTterZbebOxWi',
+                'role' => 'artist',
+                'avatar' => 'samarucPiercingPP.jpg'
+            ],
+            [
+                'username' => 'SamarucTattoo',
+                'email' => 'SamarucTattoo@gmail.com',
+                'password' => '$2y$10$IxunBxjdp2cToCJ8tXriLOtOPaO7qXyWlqoMjlcKyTterZbebOxWi',
+                'role' => 'artist',
+                'avatar' => 'samarucTattooPP.jpg'
+            ],
+            [
+                'username' => 'TheFrogMaster',
+                'email' => 'TheFrogMaster@gmail.com',
+                'password' => '$2y$10$IxunBxjdp2cToCJ8tXriLOtOPaO7qXyWlqoMjlcKyTterZbebOxWi',
+                'role' => 'artist',
+                'avatar' => 'theFrogMasterPP.jpg'
+            ],
             [
                 'username' => 'user',
                 'email' => 'user@gmail.com',
