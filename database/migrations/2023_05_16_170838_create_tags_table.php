@@ -45,7 +45,26 @@ return new class extends Migration
         ['name' => 'Skull'],
         ['name' => 'Trash Polka'],
         ['name' => 'Vikingo'],
-        ['name' => 'Anime']
+        ['name' => 'Anime'],
+        ['name' => 'Sombreado'],
+        ['name' => 'Manga'],
+        ['name' => 'Piercing'],
+        ['name' => 'Labial'],
+        ['name' => 'Ceja'],
+        ['name' => 'Nostril'],
+        ['name' => 'Neon'],
+        ['name' => 'Industrial'],
+        ['name' => 'Helix'],
+        ['name' => 'Tragus'],
+        ['name' => 'Septum'],
+        ['name' => 'Daith'],
+        ['name' => 'Conch'],
+        ['name' => 'Rook'],
+        ['name' => 'Snug'],
+        ['name' => 'Lóbulo'],
+        ['name' => 'Cartílago'],
+        ['name' => 'Dot work'],
+        ['name' => 'Lengua']
     ]);
 }
     /**
